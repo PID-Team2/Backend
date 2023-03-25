@@ -1,0 +1,28 @@
+{
+  "name": "runtime_error_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "morgan": "^1.10.0",
+    "pg": "^8.10.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.29.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
