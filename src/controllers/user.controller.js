@@ -1,17 +1,29 @@
-import { User } from "../models/User.js"
+const db = require("../models");
+const User = db.user;
 
-export const getUsers = async (req, res) => {
-    const users = await User.findAll();
-    console.log("All users:", JSON.stringify(users, null, 2));
-}
+//--------- controller methods example --------
+exports.allAccess = (req, res) => {
+    res.status(200).send("Public Content.");
+};
 
-export const postUser = async (req, res) => {
-    const { name,  email, password } = req.body
-    const user = await User.create({
-        name,
-        email,
-        password
-    })
-    console.log(user)
-    res.send('post user')
-}
+exports.userBoard = (req, res) => {
+    res.status(200).send("User Content.");
+};
+
+exports.adminBoard = (req, res) => {
+    res.status(200).send("Admin Content.");
+};
+//--------------------------------------------
+
+exports.findAll = (req, res) => {
+    User.findAll()
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving users."
+        });
+    });
+};

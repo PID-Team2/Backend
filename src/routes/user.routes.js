@@ -1,12 +1,31 @@
-import { Router } from "express";
-import { getUsers, postUser } from "../controllers/user.controller.js";
-const router = Router()
+const { authJwt } = require("../middlewares");
+const controller = require("../controllers/user.controller");
 
-router.get('/user', getUsers)
-router.get('/user/:id')
-router.post('/user', postUser)
-router.put('/user')
-router.delete('/user:id')
+module.exports = function(app) {
+  app.use(function(req, res, next) {
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, Content-Type, Accept"
+    );
+    next();
+  });
 
+//------- routes example -------------------------
+  app.get("/api/test/all", controller.allAccess);
 
-export default router
+  app.get(
+    "/api/test/user",
+    [authJwt.verifyToken],
+    controller.userBoard
+  );
+
+  app.get(
+    "/api/test/admin",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.adminBoard
+  ); 
+  //----------------------------------------------
+
+  app.get("/api/user", controller.findAll);
+
+};
