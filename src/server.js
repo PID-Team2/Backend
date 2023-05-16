@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-
+require('dotenv').config();
 const app = express();
 
 let corsOptions = {
@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const db = require("./models");
 const Role = db.role;
 
-/* only the first time use force an inititial*/
+/* only the first time use force an initial()*/
 db.sequelize.sync({force: true} ).then(() => {
   console.log('Sync Db');
   initial();
@@ -29,7 +29,7 @@ db.sequelize.sync({force: true} ).then(() => {
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to runtime error application." });
+  res.json({ message: "Welcome to codebrackets application." });
 });
 
 // routes
