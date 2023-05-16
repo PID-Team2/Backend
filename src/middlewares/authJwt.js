@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const config = require("../config/auth.config.js");
 const db = require("../models");
 const User = db.user;
 
@@ -25,7 +24,7 @@ verifyToken = (req, res, next) => {
     });
   }
 
-  jwt.verify(token, config.secret, (err, decoded) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       return res.status(401).send({
         message: "Unauthorized!"
