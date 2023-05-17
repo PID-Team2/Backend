@@ -19,9 +19,9 @@ const db = require("./models");
 const Role = db.role;
 
 /* only the first time use force an initial()*/
-db.sequelize.sync({force: true} ).then(() => {
+db.sequelize.sync(/*{force: true}*/).then(() => {
   console.log('Sync Db');
-  initial();
+ //initial();
 }).catch((err) => {
     console.log("Failed to sync db: " + err.message)
 });
@@ -37,6 +37,11 @@ require('./routes/auth.routes')(app);
 require('./routes/user.routes')(app);
 require('./routes/question.routes')(app);
 require('./routes/answare.routes')(app);
+
+require('./routes/group.routes')(app);
+require('./routes/project.routes')(app);
+
+require('./routes/player.routes')(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3030;

@@ -30,6 +30,12 @@ db.role = require("../models/role.model.js")(sequelize, Sequelize);
 db.question = require("../models/question.model.js")(sequelize, Sequelize);
 db.answare = require("../models/answare.model.js")(sequelize, Sequelize);
 
+db.group = require("../models/group.model.js")(sequelize, Sequelize);
+db.project = require("../models/project.model.js")(sequelize, Sequelize);
+
+db.player = require("../models/player.model.js")(sequelize, Sequelize);
+
+
 // realation user - role -----  m -> m
 db.role.belongsToMany(db.user, {
   through: "user_roles",
@@ -62,6 +68,41 @@ db.user.hasMany(db.answare, {
 });
 
 db.answare.belongsTo(db.user);
+
+// realation user - player ----- 1 -> m
+db.user.hasMany(db.player, {
+  foreignKey: "userId",
+});
+
+db.player.belongsTo(db.user);
+
+// realation user - group -----  m -> m
+db.group.belongsToMany(db.user, {
+  through: "user_groups",
+  foreignKey: "groupId",
+  otherKey: "userId"
+});
+db.user.belongsToMany(db.group, {
+  through: "user_groups",
+  foreignKey: "userId",
+  otherKey: "groupId"
+});
+
+// realation user(admin) - group ----- 1 -> m
+db.user.hasMany(db.group, {
+  foreignKey: "userAdminId",
+});
+
+db.group.belongsTo(db.user, { foreignKey: "userAdminId" });
+
+// realation group - project ----- 1 -> m
+db.group.hasMany(db.project, {
+  foreignKey: "groupId",
+});
+
+db.project.belongsTo(db.group);
+
+
 
 // roles
 db.ROLES = ["user", "admin"];
