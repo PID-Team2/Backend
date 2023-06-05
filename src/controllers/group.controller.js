@@ -77,6 +77,28 @@ exports.findOne = (req, res) => {
         });
       });
   };
+  exports.findAllByUser = async (req, res) => {
+    const uid = req.params.uid;
+    // validate user exist
+    const userAdmin = await User.findByPk(uid)
+    if(!userAdmin){
+      res.status(400).send({
+          message: "User admin not found"
+      });
+      return;
+    }
+  
+    Group.findAll({where: { userAdminId: uid }, include: ['user', {model: User}]})
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving groups."
+        });
+      });
+  };
 
 // Update a Group by the id in the request
 exports.update = (req, res) => {
@@ -85,11 +107,10 @@ exports.update = (req, res) => {
     Group.update(req.body, {
       where: { id: id }
     })
-      .then(num => {
+      .then(async num => {
         if (num == 1) {
-          res.send({
-            message: "Group was updated successfully."
-          });
+          const groupUpdated = await Group.findByPk(id, {include: ['user', {model: User}]})
+          res.json(groupUpdated);
         } else {
           res.send({
             message: `Cannot update Group with id=${id}. Maybe Group was not found or req.body is empty!`
@@ -128,4 +149,47 @@ exports.delete = (req, res) => {
         });
       });
   };
+
+exports.addUserToGroup = (req, res) => {
+  const groupId = req.params.groupId;
+  const userId = req.body.userId; // ID del usuario a agregar al grupo
+
+  Group.findByPk(groupId)
+    .then(group => {
+      if (group) {
+        User.findByPk(userId)
+          .then(user => {
+            if (user) {
+              group.addUser(user)
+                .then(() => {
+                  res.send({ message: 'User added to group successfully.' });
+                })
+                .catch(err => {
+                  res.status(500).send({
+                    message: 'Error adding user to group.',
+                    error: err.message
+                  });
+                });
+            } else {
+              res.status(404).send({ message: 'User not found with the provided ID.'+ userId});
+            }
+          })
+          .catch(err => {
+            res.status(500).send({
+              message: 'Error retrieving user.',
+              error: err.message
+            });
+          });
+      } else {
+        res.status(404).send({ message: `Group with ID ${groupId} not found.` });
+      }
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: 'Error retrieving group.',
+        error: err.message
+      });
+    });
+};
+
 

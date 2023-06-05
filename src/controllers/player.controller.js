@@ -7,7 +7,7 @@ const Player = db.player;
 // Create and save a new Player
 exports.create = async (req, res) => {
   // Validate request TODO: hacer una validacion real
-  const {name, userId} = req.body
+  const {name, userId, avatar} = req.body
   if (!name || !userId) {
     res.status(400).send({
       message: "Content can not be empty!"
@@ -18,7 +18,7 @@ exports.create = async (req, res) => {
   const user = await User.findByPk(userId)
   if(!user){
     res.status(400).send({
-        message: "User admin not found"
+        message: "User not found"
     });
     return;
   }
@@ -26,7 +26,8 @@ exports.create = async (req, res) => {
   // Create a Player
   const palyer = {
     name,
-    userId: userId
+    userId: userId,
+    avatar: avatar
   };
 
   // Save player in the database
@@ -78,17 +79,16 @@ exports.findOne = (req, res) => {
   };
 
 // Update a Player by the id in the request
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
     const id = req.params.id;
   
     Player.update(req.body, {
       where: { id: id }
     })
-      .then(num => {
+      .then(async num => {
         if (num == 1) {
-          res.send({
-            message: "Player was updated successfully."
-          });
+          const playerUpdated = await Player.findByPk(id)
+          res.json(playerUpdated);
         } else {
           res.send({
             message: `Cannot update Player with id=${id}. Maybe Player was not found or req.body is empty!`
@@ -96,6 +96,7 @@ exports.update = (req, res) => {
         }
       })
       .catch(err => {
+        console.log(err)
         res.status(500).send({
           message: "Error updating Player with id=" + id
         });
@@ -124,6 +125,29 @@ exports.delete = (req, res) => {
         console.log(err)
         res.status(500).send({
           message: "Could not delete Player with id=" + id
+        });
+      });
+  };
+
+  exports.findAllByUser = async (req, res) => {
+    const uid = req.params.uid;
+    // validate user exist
+    const user = await User.findByPk(uid)
+    if(!user){
+      res.status(400).send({
+          message: "User not found"
+      });
+      return;
+    }
+  
+    Player.findAll({where: { userId: uid }})
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving payers."
         });
       });
   };

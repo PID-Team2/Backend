@@ -2,6 +2,8 @@ const { authJwt } = require("../middlewares");
 const controller = require("../controllers/user.controller");
 
 module.exports = function(app) {
+  let router = require("express").Router();
+
   app.use(function(req, res, next) {
     res.header(
       "Access-Control-Allow-Headers",
@@ -11,21 +13,24 @@ module.exports = function(app) {
   });
 
 //------- routes example -------------------------
-  app.get("/api/test/all", controller.allAccess);
+router.get("/test/all", controller.allAccess);
 
-  app.get(
-    "/api/test/user",
+  router.get(
+    "/test/user",
     [authJwt.verifyToken],
     controller.userBoard
   );
 
-  app.get(
-    "/api/test/admin",
+  router.get(
+    "/test/admin",
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.adminBoard
   ); 
   //----------------------------------------------
 
-  app.get("/api/user", controller.findAll);
+  router.get("/user", controller.findAll);
 
+  router.get("/user/:id", controller.findOne);
+
+  app.use('/api', router); // prefix for all routes
 };

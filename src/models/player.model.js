@@ -10,6 +10,10 @@ module.exports = (sequelize, Sequelize) => {
       xp: {
         type: Sequelize.INTEGER,
         defaultValue: 0
+      },
+      avatar: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
       }
     });
   

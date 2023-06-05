@@ -24,7 +24,7 @@ db.sequelize.sync(/*{force: true}*/).then(() => {
  //initial();
 }).catch((err) => {
     console.log("Failed to sync db: " + err.message)
-});
+})
 
 
 // simple route

@@ -20,5 +20,9 @@ module.exports = app => {
     // Delete a player with id
     router.delete("/:id",  [authJwt.verifyToken], player.delete);
 
+    // Retrieve all players for an user
+    router.get("/user/:uid", player.findAllByUser);
+
+
     app.use('/api/player', router); // prefix for all routes
 };

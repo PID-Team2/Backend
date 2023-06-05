@@ -27,3 +27,39 @@ exports.findAll = (req, res) => {
         });
     });
 };
+// Find a single user with an id
+exports.findOne = (req, res) => {
+  const id = req.params.id;
+
+  User.findOne({where: { id: id }, include: [
+    {
+      model: db.player,
+      as: 'players'
+    },
+    {
+      model: db.group,
+      as: 'groups'
+    }
+]})
+    .then(data => {
+      if (data) {
+        res.send({
+          id: data.id,
+          username: data.username,
+          email: data.email,
+          players: data.players,
+          groups: data.groups
+        });
+      } else {
+        res.status(404).send({
+          message: `Cannot find User with id = ${id}.`
+        });
+      }
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).send({
+        message: "Error retrieving User with id = " + id
+      });
+    });
+};

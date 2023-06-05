@@ -20,5 +20,12 @@ module.exports = app => {
     // Delete a group with id
     router.delete("/:id",  [authJwt.verifyToken], group.delete);
 
+    // Retrieve all groups for user admin
+    router.get("/admin/:uid", [authJwt.verifyToken], group.findAllByUser);
+
+    //addUserToGroup
+    router.post("/:groupId/user/", [authJwt.verifyToken], group.addUserToGroup);
+
+
     app.use('/api/group', router); // prefix for all routes
 };
