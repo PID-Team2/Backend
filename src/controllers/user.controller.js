@@ -16,17 +16,17 @@ exports.adminBoard = (req, res) => {
 //--------------------------------------------
 
 exports.findAll = (req, res) => {
-    User.findAll()
-      .then(data => {
-        res.send(data);
+    User.findAll()                                                             //(1)
+      .then(data => {                                                          //(2)
+        res.send(data);                                                        //(3)
       })
-      .catch(err => {
-        res.status(500).send({
+      .catch(err => {                                  
+        res.status(500).send({                                                 //(4)
           message:
             err.message || "Some error occurred while retrieving users."
         });
     });
-};
+};                                                                             //(5)
 // Find a single user with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
