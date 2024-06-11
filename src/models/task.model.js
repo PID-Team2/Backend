@@ -1,11 +1,11 @@
 module.exports = (sequelize, Sequelize) => {
-  const Project = sequelize.define("projects", {
+  const Task = sequelize.define("task", {
     id: {
       type: Sequelize.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    title: {
+    name: {
       type: Sequelize.STRING,
     },
     description: {
@@ -13,17 +13,24 @@ module.exports = (sequelize, Sequelize) => {
     },
     status: {
       type: Sequelize.STRING,
+      default: "",
+    },
+    isAsigned: {
+      type: Sequelize.INTEGER,
+      default: 0,
+    },
+    startTime: {
+      type: Sequelize.STRING,
+    },
+    completedAt: {
+      type: Sequelize.STRING,
+      default: "",
     },
     priority: {
       type: Sequelize.STRING,
-    },
-    startTieme: {
-      type: Sequelize.STRING,
-    },
-    endTieme: {
-      type: Sequelize.STRING,
+      default: "",
     },
   });
 
-  return Project;
+  return Task;
 };
